@@ -1,0 +1,17 @@
+{{#if isEditing}}
+  {{d-icon "pencil-alt"}}
+{{else}}
+  {{composer-actions
+    composerModel=model
+    replyOptions=model.replyOptions
+    canWhisper=canWhisper
+    openComposer=openComposer
+    closeComposer=closeComposer
+    action=model.action
+    tabindex=tabindex
+  }}
+{{/if}}
+
+<span class="action-title">
+  {{actionTitle}}
+</span>
