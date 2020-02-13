@@ -3,25 +3,25 @@
 $ sudo yum update
 $ yum -y install yum-utils
 ```
-#### 添加Docker源
+##### 添加Docker源
 ```
 $ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 ```
-#### 更新源
+##### 更新源
 ```
 $ yum makecache
 $ yum list docker-ce --showduplicates | sort -r
 ```
-#### 安装docker-ce
+##### 安装docker-ce
 ```
 $ sudo yum install docker-ce-18.09.7 docker-ce-cli-18.09.7 containerd.io
 ```
-#### 启动Docker
+##### 启动Docker
 ```
 $ systemctl start docker
 $ systemctl enable docker
 ```
-#### 查看docker版本
+##### 查看docker版本
 ```
 $ docker version
 ```
@@ -39,7 +39,7 @@ $ cd /var/discourse
 ```
 $ ./discourse-setup
 ```
-#### 配置账号、邮箱
+##### 配置账号、邮箱
 ````
 Hostname for your Discourse? [discourse.example.com]:
 Email address for admin account(s)? [me@example.com,you@example.com]:
@@ -77,11 +77,11 @@ $ vim launcher
 ```
 
 #### SSL证书配置
-##### 证书文件位置：
+###### 证书文件位置：
 ###### /var/discourse/shared/standalone/ssl
-##### 私钥命名为：(文件名不能随意更改)
+###### 私钥命名为：(文件名不能随意更改)
 ###### /var/discourse/shared/standalone/ssl/ssl.key
-##### 证书命名为：(文件名不能随意更改)
+###### 证书命名为：(文件名不能随意更改)
 ###### /var/discourse/shared/standalone/ssl/ssl.crt
 
 
