@@ -1,4 +1,4 @@
-####安装docker
+##安装docker
 ```
 $ sudo yum update
 $ yum -y install yum-utils
