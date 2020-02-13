@@ -1,13 +1,13 @@
-##安装docker
+安装docker
 ```
 $ sudo yum update
 $ yum -y install yum-utils
 ```
-####添加Docker源
+添加Docker源
 ```
 $ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 ```
-####更新源
+更新源
 ```
 $ yum makecache
 $ yum list docker-ce --showduplicates | sort -r
