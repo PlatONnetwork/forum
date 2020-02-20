@@ -291,3 +291,40 @@ server {
 ```
 ##### 重新加载 nginx 配置，查看页面是否能够访问。
 
+
+
+#### 快速修改配置参考方案
+
+##### discoruse 配置是在创建容器时通过添加环境变量的方式传进容器
+
+##### 已经部署好项目后，进入容器
+```
+$ sudo docker exec -it app /bin/bash
+```
+##### 查看环境变量，可以修改的配置
+```
+$ env  
+```
+##### 修改启动文件
+```
+$ vim /sbin/boot
+```
+###### 添加需要修改的配置到文件顶部，保存
+###### 例：修改邮箱端口
+```
+export DISCOURSE_SMTP_PORT=1234 
+```
+##### 退出容器
+```
+$ exit
+```
+##### 重启容器  （约10秒钟）
+```
+$ /var/discourse/launcher restart app
+```
+
+##### 页面查看 邮箱端口修改情况
+
+###### https://DOMAIN_NAME/admin/email
+
+##### 如果重建容器   /var/discourse/launcher rebuild app 执行前需修改配置文件 /var/discourse/containers/app.yml
