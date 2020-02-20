@@ -128,6 +128,7 @@ guest: /var/log
 
 
 #### 使用Let's Encrypt 添加https证书
+
 ##### 配置app.yml
 ```
 $ vim /var/discourse/containers/app.yml
@@ -157,3 +158,136 @@ LETSENCRYPT_ACCOUNT_EMAIL: example@example.com
 ```
 ./launcher rebuild app
 ```
+
+
+#### 端口被占用时解决方案 1 (使用nginx代理 启动安装工具时需关闭 nginx )
+
+##### 修改app.yml配置文件
+```
+expose:
+  - "81:80"   # http
+  - "444:443" # https
+```
+##### 添加 nginx 配置文件 discourse.config
+
+
+```
+server {
+    listen  443 ssl;
+    server_name SEVER_NAME(域名);
+    ssl on;    #nginx版本不同配置方式有差异
+    ssl_certificate      PATH(证书文件路径);
+    ssl_certificate_key  PATH(证书文件路径);
+    ssl_session_tickets off;
+ location / {
+        proxy_set_header  Host  $http_host;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass  https://127.0.0.1:444; (服务器IP地址)
+    }
+}
+
+server {
+    listen  80;
+    server_name SEVER_NAME(域名);
+    location / {
+        proxy_set_header  Host  $http_host;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass  https://127.0.0.1:81;(服务器IP地址)
+    }
+}
+
+```
+
+##### 重建容器
+```
+$ ./launcher rebuild app
+```
+
+#### 端口被占用时解决方案 2 (使用 nginx 代理 启动安装工具时不需关闭 nginx )
+
+##### 克隆 discourse_docker
+
+```
+$ sudo -s
+$ git clone https://github.com/discourse/discourse_docker.git /var/discourse
+$ cd /var/discourse
+```
+
+##### 准备一个 app.yml 配置文件 跳过 setup 时对 端口的判断
+
+```
+$ cp app.yml containers/app.yml
+```
+
+##### 修改app.yml配置文件
+
+```
+$ vim containers/app.yml
+
+
+
+expose:
+  - "81:80"   # http
+  - "444:443" # https
+```
+  
+##### 修改nginx 配置文件 
+
+```
+server {
+    listen  80;
+    server_name SEVER_NAME(域名);
+    location / {
+        proxy_set_header  Host  $http_host;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass  http://127.0.0.1:81;  #(http)
+    }
+}
+```
+##### 启动安装工具
+
+```
+$ ./discourse-setup
+```
+##### 查看证书是否申请成功
+
+```
+$ cd /var/discoruse/shared/standalone/ssl
+$ ls -lh
+```
+
+##### 再次修改nginx 配置文件 
+
+```
+server {
+    listen  443 default ssl;
+    server_name SEVER_NAME(域名) ;
+    ssl_certificate      PATH(证书文件路径);
+    ssl_certificate_key  PATH(证书文件路径);
+    ssl_session_tickets off;
+	location / {
+        proxy_set_header  Host  $http_host;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass  https://127.0.0.1:444;
+
+    }
+
+}
+
+server {
+    listen  80;
+    server_name SEVER_NAME(域名) ;
+    location / {
+        proxy_set_header  Host  $http_host;
+        proxy_set_header  X-Real-IP  $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass  https://127.0.0.1:81;  #(https)
+    }
+}
+```
+
+
