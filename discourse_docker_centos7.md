@@ -293,7 +293,7 @@ server {
 
 
 
-#### 快速修改配置参考方案
+#### 快速修改配置参考方案一
 
 ##### discoruse 配置是在创建容器时通过添加环境变量的方式传进容器
 
@@ -309,7 +309,7 @@ $ env
 ```
 $ vim /sbin/boot
 ```
-###### 添加需要修改的配置到文件顶部，保存
+##### 添加需要修改的配置到文件顶部，保存
 ###### 例：修改邮箱端口
 ```
 export DISCOURSE_SMTP_PORT=1234 
@@ -327,4 +327,60 @@ $ /var/discourse/launcher restart app
 
 ###### https://DOMAIN_NAME/admin/email
 
+##### 如果重建容器   /var/discourse/launcher rebuild app 执行前需修改配置文件 /var/discourse/containers/app.yml
+
+#### 快速修改配置参考方案二
+
+##### 停止并删除容器
+
+```
+$ sudo docker stop app && sudo docker rm app
+```
+
+##### 修改启动容器命令
+
+```
+$ sudo docker run --shm-size=512m -d --restart=always -e LANG=en_US.UTF-8 -e RAILS_ENV=production -e UNICORN_WORKERS=2 -e UNICORN_SIDEKIQS=1 -e RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 -e RUBY_GC_HEAP_GROWTH_MAX_SLOTS=40000 -e RUBY_GC_HEAP_INIT_SLOTS=400000 -e RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR=1.5 -e DISCOURSE_DB_SOCKET=/var/run/postgresql -e DISCOURSE_DB_HOST= -e DISCOURSE_DB_PORT= -e LETSENCRYPT_DIR=/shared/letsencrypt -e DISCOURSE_HOSTNAME=www.eos.top -e DISCOURSE_DEVELOPER_EMAILS=1976335605@qq.com -e DISCOURSE_SMTP_ADDRESS=mail.newton.top -e DISCOURSE_SMTP_PORT=25 -e DISCOURSE_SMTP_USER_NAME=postmaster@newton.top -e DISCOURSE_SMTP_PASSWORD=Aphp9mdl8 -e LETSENCRYPT_ACCOUNT_EMAIL=me@example.com -h platon3-app -e DOCKER_HOST_IP=172.17.0.1 --name app -t -p 80:80 -p 443:443 -v /var/discourse/shared/standalone:/shared -v /var/discourse/shared/standalone/log/var-log:/var/log --mac-address 02:7d:e7:09:5d:83 local_discourse/app /sbin/boot
+```
+```
+docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+OPTIONS说明：
+
+	-a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项；
+
+	-d: 后台运行容器，并返回容器ID；
+
+	-i: 以交互模式运行容器，通常与 -t 同时使用；
+
+	-P: 随机端口映射，容器内部端口随机映射到主机的高端口
+
+	-p: 指定端口映射，格式为：主机(宿主)端口:容器端口
+
+	-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；
+
+	--name="nginx-lb": 为容器指定一个名称；
+
+	--dns 8.8.8.8: 指定容器使用的DNS服务器，默认和宿主一致；
+
+	--dns-search example.com: 指定容器DNS搜索域名，默认和宿主一致；
+
+	-h "mars": 指定容器的hostname；
+
+	-e username="ritchie": 设置环境变量；
+
+	--env-file=[]: 从指定文件读入环境变量；
+
+	--cpuset="0-2" or --cpuset="0,1,2": 绑定容器到指定CPU运行；
+
+	-m :设置容器使用内存最大值；
+
+	--net="bridge": 指定容器的网络连接类型，支持 bridge/host/none/container: 四种类型；
+
+	--link=[]: 添加链接到另一个容器；
+
+	--expose=[]: 开放一个端口或一组端口；
+
+	--volume , -v:	绑定一个卷
+```
 ##### 如果重建容器   /var/discourse/launcher rebuild app 执行前需修改配置文件 /var/discourse/containers/app.yml
