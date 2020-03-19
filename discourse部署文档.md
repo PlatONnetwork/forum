@@ -303,6 +303,13 @@ $ rm -rf PATH_TO_PLUGIN
 $ cd ../
 $ RAILS_ENV=production bundle exec rake assets:precompile;
 ```
+###### 退出容器
+
+3、重启容器
+```
+$ ./launcher restart app
+```
+
 ##### 1、安装分享链接、精华帖分类插件
 
 1、进入容器
