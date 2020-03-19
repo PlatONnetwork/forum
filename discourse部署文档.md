@@ -280,3 +280,141 @@ server {
 ```
 ##### 重新加载 nginx 配置，查看页面是否能够访问。
 
+
+#### 安装插件
+
+######  各个插件需分别安装并验证论坛是否运行正常，如论坛出现异常需删除插件。
+
+##### 删除插件
+
+1、进入容器
+```
+$ sudo docker exec -it app /bin/bash
+```
+2、进入插件安装目录、查看已安装插件
+```
+$ su discourse 
+$ cd /var/www/discourse/plugins 
+$ ls
+```
+3、删除插件对应文件夹
+```
+$ rm -rf PATH_TO_PLUGIN
+$ cd ../
+$ RAILS_ENV=production bundle exec rake assets:precompile;
+```
+##### 1、安装分享链接、精华帖分类插件
+
+1、进入容器
+```
+$ sudo docker exec -it app /bin/bash
+```
+2、安装插件
+```
+$ su discourse 
+$ cd /var/www/discourse 
+$ RAILS_ENV=production bundle exec rake plugin:install repo=https://github.com/zhangml123/forum-plugins.git  
+$ RAILS_ENV=production bundle exec rake assets:precompile;
+
+```
+###### 退出容器
+3、重启容器
+```
+$ ./launcher restart app
+```
+
+##### 2、安装math插件
+
+1、进入容器
+```
+$ sudo docker exec -it app /bin/bash
+```
+2、安装插件
+```
+$ su discourse 
+$ cd /var/www/discourse 
+$ RAILS_ENV=production bundle exec rake plugin:install repo=https://github.com/discourse/discourse-math.git
+$ RAILS_ENV=production bundle exec rake assets:precompile
+
+```
+###### 退出容器
+
+3、重启容器
+```
+$ ./launcher restart app
+```
+4、启用math插件
+
+管理员后台 》 插件 ， 选择 discourse-math 的设置选项，选择 discourse math enabled 启用插件。
+
+##### 3、安装智能验证码插件
+
+1、进入容器
+```
+$ sudo docker exec -it app /bin/bash
+```
+2、安装插件
+```
+$ su discourse 
+$ cd /var/www/discourse 
+$ RAILS_ENV=production bundle exec rake plugin:install repo=https://github.com/zhangml123/discourse_smart_captcha.git 
+$ RAILS_ENV=production bundle exec rake assets:precompile;
+
+```
+###### 退出容器
+
+3、重启容器
+```
+$ ./launcher restart app
+```
+
+4、启动插件
+
+###### 进入管理后台配置
+
+管理员后台 》 设置 》 插件
+
+###### 配置参数并启动插件
+
+配置 app key, access key, access secret, remote ip 参数 （ 参数获取地址 https://promotion.aliyun.com/ntms/act/captchaIntroAndDemo.html）
+
+勾选 discourse smart captcha 启动插件
+
+######  重新构建容器执行 ./launcher rebuild app 前须在 containers/app.yml 配置文件中添加需要使用的插件。（以下为添加'智能验证码'插件添加方式）
+
+1、配置`app.yml` 
+```
+    hooks:
+      after_code:
+        - exec:
+            cd: $home/plugins
+            cmd:
+              - mkdir -p plugins
+              - git clone https://github.com/discourse/docker_manager.git
+              - git clone https://github.com/zhangml123/discourse_smart_captcha.git
+```
+2、重构容器
+```
+$ ./launcher rebuild app
+```
+##### 更新插件 （以下为添加'智能验证码'插件更新方式）
+
+1、进入容器
+```
+$ sudo docker exec -it app /bin/bash
+```
+2、更新插件
+```
+$ su discourse 
+$ rm -rf /var/www/discourse/plugins/discourse_smart_captcha 
+$ cd /var/www/discourse 
+$ RAILS_ENV=production bundle exec rake plugin:install repo=https://github.com/zhangml123/discourse_smart_captcha.git 
+$ RAILS_ENV=production bundle exec rake assets:precompile;
+
+```
+###### 退出容器
+
+3、重启容器
+```
+$ ./launcher restart app
+```
