@@ -26,7 +26,7 @@
     "jquery.cookie": "1.4.1",
     "magnific-popup": "1.1.0",
     "markdown-it": "10.0.0",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "moment-timezone": "0.5.25",
     "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
     "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
