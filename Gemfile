@@ -18,19 +18,19 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.1'
-  gem 'actionpack', '6.0.1'
-  gem 'actionview', '6.0.1'
-  gem 'activemodel', '6.0.1'
-  gem 'activerecord', '6.0.1'
-  gem 'activesupport', '6.0.1'
-  gem 'railties', '6.0.1'
+  gem 'actionmailer', '7.0.3.1'
+  gem 'actionpack', '7.0.3.1'
+  gem 'actionview', '7.0.3.1'
+  gem 'activemodel', '7.0.3.1'
+  gem 'activerecord', '7.0.3.1'
+  gem 'activesupport', '7.0.3.1'
+  gem 'railties', '7.0.3.1'
   gem 'sprockets-rails'
 end
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # This is a desired upgrade we should get to.
-gem 'sprockets', '3.7.2'
+gem 'sprockets', '4.0.3'
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -56,7 +56,7 @@ gem 'redis-namespace'
 # we used an old branch which is the fastest one out there
 # are long term goal here is to fork this gem so we have a
 # better maintained living fork
-gem 'active_model_serializers', '~> 0.8.3'
+gem 'active_model_serializers', '~> 0.10.13'
 
 gem 'onebox'
 
@@ -133,7 +133,7 @@ gem 'highline', '~> 1.7.0', require: false
 # This is a bit of a hornets nest cause in an ideal world we much prefer
 # if Sidekiq reused session and CSRF mitigation with Discourse on the
 # _forum_session cookie instead of a rack.session cookie
-gem 'rack', '2.0.8'
+gem 'rack', '2.2.4'
 
 gem 'rack-protection' # security
 gem 'cbor', require: false
@@ -173,7 +173,7 @@ group :test, :development do
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
 
   # TODO once 4.0.0 is released upgrade to it, at time of writing 3.9.0 is latest
-  gem 'rspec-rails', '4.0.0.beta2', require: false
+  gem 'rspec-rails', '4.0.1', require: false
 
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
